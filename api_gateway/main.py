@@ -1,5 +1,5 @@
-from fastapi import FastAPI, HTTPException, Request
-from pydantic import BaseModel, validator
+from fastapi import FastAPI, HTTPException
+from pydantic import BaseModel, Field
 import httpx
 
 app = FastAPI()
@@ -7,15 +7,7 @@ app = FastAPI()
 PROCESSADOR_URL = "http://processador:8001/processar"
 
 class ComentarioEntrada(BaseModel):
-    comentario: str
-
-    @validator('comentario')
-    def validar_conteudo(cls, v):
-        if not v.strip():
-            raise ValueError("Comentário não pode estar vazio")
-        if len(v) < 5:
-            raise ValueError("Comentário muito curto")
-        return v
+    comentario: str = Field(..., min_length=5, description="Comentário deve ter no mínimo 5 caracteres")
 
 @app.post("/comentario")
 async def receber_comentario(entrada: ComentarioEntrada):

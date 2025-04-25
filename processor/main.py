@@ -9,6 +9,7 @@ ARMAZENADOR_URL = "http://armazenador:8002/armazenar"
 async def processar_comentario(request: Request):
     dados = await request.json()
     comentario = dados.get("comentario", "")
+    # Simples "processamento": caixa baixa + remoção de palavrões (exemplo)
     comentario_processado = comentario.lower().replace("ruim", "***")
     try:
         async with httpx.AsyncClient() as client:
